@@ -472,6 +472,17 @@ public class Fraction
 
         }
     }
+    //Creates an improper fraction if user just wants an improper fractions
+    public void MakeImproper()
+    {
+        _numerator = _whole * _numerator;
+        _whole = 0;
+    }
+    //Creates a proper fraction if the user wants the improper fraction back into a proper one.
+    public void MakeProper()
+    {
+        Reduce(_numerator, _denominator);
+    }
         
 
 }
