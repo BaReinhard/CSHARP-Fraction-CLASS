@@ -196,6 +196,33 @@ public class Fraction
         Denominator = denomFirst * denomSecond;
         Reduce(Whole, Numerator, Denominator);
     }
+    //Subtracts two fractions including whole numbers, numerators, and denominators
+    public void Subtract(int wholeFirst, int numFirst, int denomFirst, int wholeSecond, int numSecond, int denomSecond)
+    {
+        Whole = wholeFirst - wholeSecond;
+        Numerator = (numFirst * denomSecond) - (numSecond * denomFirst);
+        Denominator = denomFirst * denomSecond;
+        Reduce(Whole, Numerator, Denominator);
+    }
+    //Overloaded Subtracts two fractions using only 2 numerators and 2 denominators
+    public void Subtract(int numFirst, int denomFirst, int numSecond, int denomSecond)
+    {
+        Whole = 0;
+        Numerator = (numFirst * denomSecond) - (numSecond * denomFirst);
+        Denominator = denomFirst * denomSecond;
+        Reduce(Whole, Numerator, Denominator);
+    }
+    //Overloaded Subtracts two fractions in string form and parses them by use of Private void parseString() to get integer values for proper mathmatical operations
+    public void Subtract(string fracFirst, string fracSecond)
+    {
+        int wholeFirst = 0, wholeSecond = 0, numFirst = 0, numSecond = 0, denomFirst = 0, denomSecond = 0;
+        //Calls parseString() with pass by reference for mathmatical operations
+        parseString(fracFirst, fracSecond, ref wholeFirst, ref numFirst, ref denomFirst, ref wholeSecond, ref numSecond, ref denomSecond);
+        Whole = wholeFirst - wholeSecond;
+        Numerator = (numFirst * denomSecond) - (numSecond * denomFirst);
+        Denominator = denomFirst * denomSecond;
+        Reduce(Whole, Numerator, Denominator);
+    }
     //Multiplies 2 whole numbers, 2 numerators, and 2 denominators
     public void Multiply( int wholeFirst, int numFirst,  int denomFirst, int wholeSecond, int numSecond, int denomSecond)
     {
@@ -236,6 +263,74 @@ public class Fraction
         Numerator = numFirst * numSecond;
         Denominator = denomFirst * denomSecond;
         //Reduce function to reduce to proper fraction
+        Reduce(Whole, Numerator, Denominator);
+    }
+    //Divides 2 whole numbers(if included), 2 numerators, and 2 denominators which are parsed from 2 string inputs
+    public void Divide(string fracFirst, string fracSecond)
+    {
+        int wholeFirst = 0, wholeSecond = 0, numFirst = 0, numSecond = 0, denomFirst = 0, denomSecond = 0, tempDenom;
+        //Parses fraceFirst and fracSecond and returns them by means of referenced variables
+        parseString(fracFirst, fracSecond, ref wholeFirst, ref numFirst, ref denomFirst, ref wholeSecond, ref numSecond, ref denomSecond);
+        //Converts to improper fraction and multiplies the results together
+        numFirst = numFirst + (wholeFirst * denomFirst);
+        wholeFirst = 0;
+        numSecond = numSecond + (wholeSecond * denomSecond);
+        wholeSecond = 0;
+        Whole = 0;
+        //Inverses second fraction to simply multiply and reuse code from multiply
+        //After temp is given back to numSecond a private Multiply function could be used if adding to the stack is of no importance.
+        tempDenom = denomSecond;
+        denomSecond = numSecond;
+        numSecond = tempDenom;
+        //Combines into one Numerator and Denominator to be passed to reduce
+        //MultiplyForDivision(numFirst,denomFirst,numSecond,denomSecond); instead of the next 2 lines
+        Numerator = numFirst * numSecond;
+        Denominator = denomFirst * denomSecond;
+        //Reduce function to reduce to proper fraction
+        Reduce(Whole, Numerator, Denominator);
+    }
+    private void MultiplyForDivision(int numFirst, int denomFirst, int numSecond, int denomSecond)
+    {
+        Numerator = numFirst * numSecond;
+        Denominator = denomFirst * denomSecond;
+    }
+    //Overloaded Divides
+    public void Divide(int wholeFirst, int numFirst, int denomFirst, int wholeSecond, int numSecond, int denomSecond)
+    {
+        int tempDenom;
+        // Creates 2 improper fractions to multiply for proper results
+        numFirst = numFirst + (wholeFirst * denomFirst);
+        wholeFirst = 0;
+        numSecond = numSecond + (wholeSecond * denomSecond);
+        wholeSecond = 0;
+        Whole = 0;
+        //Inverses second fraction to simply multiply and reuse code from multiply
+        //After temp is given back to numSecond a private Multiply function could be used if adding to the stack is of no importance.
+        tempDenom = denomSecond;
+        denomSecond = numSecond;
+        numSecond = tempDenom;
+        //Combines the Numerators to pass to Reduce() for a reduced proper fraction
+        //MultiplyForDivision(numFirst,denomFirst,numSecond,denomSecond); instead of the next 2 lines
+        Numerator = numFirst * numSecond;
+        Denominator = denomFirst * denomSecond;
+        //Could also use Reduce(Numerator, Denominator), but the below code is a bit more clear
+        Reduce(Whole, Numerator, Denominator);
+    }
+    //Overloaded Multiplies 2 numerators and 2 denominators
+    public void Divide(int numFirst, int denomFirst, int numSecond, int denomSecond)
+    {
+        int tempDenom;
+        Whole = 0;
+        //Inverses second fraction to simply multiply and reuse code from multiply
+        //After temp is given back to numSecond a private Multiply function could be used if adding to the stack is of no importance.
+        tempDenom = denomSecond;
+        denomSecond = numSecond;
+        numSecond = tempDenom;
+        //Combines the Numerators to pass to Reduce() for a reduced proper fraction
+        //MultiplyForDivision(numFirst,denomFirst,numSecond,denomSecond); instead of the next 2 lines
+        Numerator = numFirst * numSecond;
+        Denominator = denomFirst * denomSecond;
+        //Calls Reduce to reduce to proper fraction
         Reduce(Whole, Numerator, Denominator);
     }
     //ReturnFraction() method used to look at current Properties of FractionDemo class and depending on values will return the results in string format
