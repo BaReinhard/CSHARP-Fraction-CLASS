@@ -316,7 +316,7 @@ public class Fraction
         //Could also use Reduce(Numerator, Denominator), but the below code is a bit more clear
         Reduce(Whole, Numerator, Denominator);
     }
-    //Overloaded Multiplies 2 numerators and 2 denominators
+    //Overloaded Divides 2 numerators and 2 denominators
     public void Divide(int numFirst, int denomFirst, int numSecond, int denomSecond)
     {
         int tempDenom;
