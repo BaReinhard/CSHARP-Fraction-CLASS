@@ -23,9 +23,9 @@ public class Fraction
     // FractionDemo constructor overloaded to allow for only Numerator and Denominator
     public Fraction(int num, int denom)
     {
-       
+
         _whole = 0;
-        _mumerator = num;
+        _numerator = num;
         _denominator = denom;
 
 
@@ -42,7 +42,7 @@ public class Fraction
             _denominator = denom;
         else
             _denominator = 1;
-        
+
     }
     //Whole number field
     private int _whole;
@@ -81,7 +81,7 @@ public class Fraction
         {
             return _denominator;
 
-            }
+        }
         set
         {
             if (value == 0)
@@ -95,7 +95,7 @@ public class Fraction
         }
     }
     //Private Method to reduce a fraction into its lowest terms, allows for whole, numerator, and denominator
-    private void Reduce( int whole,  int num,  int denom)
+    private void Reduce(int whole, int num, int denom)
     {
         //Factors fracting into improper fractions for easier calculation of lowest form and get rid of any possible user error input ie: 1 32/12
         _numerator = num + (whole * denom);
@@ -109,7 +109,8 @@ public class Fraction
             _numerator = 0;
             _denominator = 1;
 
-        }else if(num == denom)
+        }
+        else if (num == denom)
         {
             //Using Math.Floor to Round Down so that the Whole Number isn't incorrectly rounding up causing incorrect values
             _whole = Convert.ToInt16(Math.Floor(Convert.ToDouble(Convert.ToDouble(Numerator) / Convert.ToDouble(Denominator))));
@@ -123,9 +124,10 @@ public class Fraction
             _numerator = num % denom;
         }
         //For loop to ensure Numerator and Denominator are factored into their lowest possible form
-        for (int i =_numerator * _denominator; i>1; i--)
+        for (int i = _numerator * _denominator; i > 1; i--)
         {
-            if((_numerator % i == 0) && (_denominator % i == 0)){
+            if ((_numerator % i == 0) && (_denominator % i == 0))
+            {
                 _numerator /= i;
                 _denominator /= i;
             }
@@ -134,7 +136,7 @@ public class Fraction
 
     }
     //Private Method to reduce a fraction into its lowest terms, overloaded to allow for just numerator and denominator
-    private void Reduce( int num, int denom)
+    private void Reduce(int num, int denom)
     {
 
         _whole = 0;
@@ -170,7 +172,7 @@ public class Fraction
 
     }
     //Adds two fractions including whole numbers, numerators, and denominators
-    public void Add(int wholeFirst,int numFirst, int denomFirst, int wholeSecond, int numSecond, int denomSecond)
+    public void Add(int wholeFirst, int numFirst, int denomFirst, int wholeSecond, int numSecond, int denomSecond)
     {
         _whole = wholeFirst + wholeSecond;
         _numerator = (numFirst * denomSecond) + (numSecond * denomFirst);
@@ -178,7 +180,7 @@ public class Fraction
         Reduce(_whole, _numerator, _denominator);
     }
     //Overloaded Adds two fractions using only 2 numerators and 2 denominators
-    public void Add( int numFirst, int denomFirst,  int numSecond, int denomSecond)
+    public void Add(int numFirst, int denomFirst, int numSecond, int denomSecond)
     {
         _whole = 0;
         _numerator = (numFirst * denomSecond) + (numSecond * denomFirst);
@@ -188,7 +190,7 @@ public class Fraction
     //Overloaded Adds two fractions in string form and parses them by use of Private void parseString() to get integer values for proper mathmatical operations
     public void Add(string fracFirst, string fracSecond)
     {
-        int wholeFirst=0, wholeSecond=0, numFirst=0, numSecond=0, denomFirst=0, denomSecond=0;
+        int wholeFirst = 0, wholeSecond = 0, numFirst = 0, numSecond = 0, denomFirst = 0, denomSecond = 0;
         //Calls parseString() with pass by reference for mathmatical operations
         parseString(fracFirst, fracSecond, ref wholeFirst, ref numFirst, ref denomFirst, ref wholeSecond, ref numSecond, ref denomSecond);
         _whole = wholeFirst + wholeSecond;
@@ -487,12 +489,12 @@ public class Fraction
             //Grabs the index of the decimal place
             dotIndex = fracFirst.IndexOf(" ");
             //Grabs the whole number from the string
-            _whole = Convert.ToInt16(fracFirst.Substring(0, spaceIndex));//parses from index 0 and sets the length of the substring to the spaceIndex
+            _whole = Convert.ToInt16(fracFirst.Substring(0, dotIndex));//parses from index 0 and sets the length of the substring to the spaceIndex
         }
 
-
+        double newDouble = (Convert.ToDouble(fracFirst.Substring(dotIndex, endString)) * Convert.ToDouble(10));
         //Sets the fractions numerator to take into account based on number of decimal places desired
-        _numerator = Convert.ToInt64(Convert.ToDecimal(fracFirst.Substring(spaceIndex, endString)) * 10 ^ decPlaces);
+        _numerator = Convert.ToInt32(Math.Pow(newDouble, Convert.ToDouble(decPlaces)));
         //Sets _denominator so Reduce can later be called.
         _denominator = 10 ^ decPlaces;
 
@@ -518,14 +520,16 @@ public class Fraction
     //Decimal to fraction, then reduce
     public string DecToFrac(decimal dec, int decPlaces, bool properFrac)
     {
-        int fracFirst = String.Format("{0,R}", dec);
+        string fracFirst = String.Format("{0,R}", Convert.ToString(dec));
 
         parseDecimalString(fracFirst, decPlaces);
         Reduce(_whole, _numerator, _denominator);
         if (!properFrac)
         {
             MakeImproper();
+            return _numerator + "/" + _denominator;
         }
+        return _whole + " " + _numerator + "/" + _denominator;
     }
     //Compare fraction to integer, compare fractions return boolean
 
