@@ -649,7 +649,19 @@ public class Fraction
         }else if(fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator > fracSecond.Numerator)
         {
             return true;
-        }else //if (fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator < fracSecond.Numerator)
+        }else if(fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator < fracSecond.Numerator)
+        {
+            return false;
+        }else if(fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator == fracSecond.Numerator)
+        {
+            if(fracFirst.Denominator > fracSecond.Denominator)
+            {
+                return false;
+            }else
+            {
+                return true;
+            }
+        }else
         {
             return false;
         }
@@ -689,7 +701,22 @@ public class Fraction
         {
             return true;
         }
-        else //if (fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator < fracSecond.Numerator)
+        if (fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator > fracSecond.Numerator)
+        {
+            return false;
+        }
+        else if (fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator == fracSecond.Numerator)
+        {
+            if (fracFirst.Denominator > fracSecond.Denominator)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
         {
             return false;
         }
