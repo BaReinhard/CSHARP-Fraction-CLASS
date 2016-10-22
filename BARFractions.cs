@@ -102,7 +102,7 @@ public class Fraction
         _whole = 0;
         _denominator = denom;
 
-        if (_numerator == _denominator && whole == 0)
+        if ((_numerator >= _denominator) && _whole == 0)
         {
             //Using Math.Floor to Round Down so that the Whole Number isn't incorrectly rounding up causing incorrect values
             _whole = Convert.ToInt16(Math.Floor(Convert.ToDouble(Convert.ToDouble(Numerator) / Convert.ToDouble(Denominator))));
@@ -470,6 +470,7 @@ public class Fraction
         int endString = fracFirst.Length;
         //initializes variable to hold spaceIndex if there is a whole number
         int spaceIndex = 0;
+        int slashIndex = 0;
         //Checks for space
         if (fracFirst.Contains(" "))
         {
@@ -481,7 +482,7 @@ public class Fraction
         if (fracFirst.Contains("/"))
         {
             //Grabs the index of the space
-            int slashIndex = fracFirst.IndexOf("/");
+             slashIndex = fracFirst.IndexOf("/");
             //Grabs the numerator from the remaining string
             _numerator = Convert.ToInt16(fracFirst.Substring(spaceIndex, slashIndex - spaceIndex));//parses from the index of the space and sets the length of the substring to the (slashes index - spaceIndex) ie. The string value from the space to the slash
             //Grabs the denominator from the remaining string
@@ -489,6 +490,10 @@ public class Fraction
 
 
 
+        }
+        if (spaceIndex == 0 && slashIndex == 0)
+        {
+            _whole = Convert.ToInt32(fracFirst);
         }
     }
     private void parseDecimalString(string fracFirst, int decPlaces)
@@ -600,6 +605,110 @@ public class Fraction
         {
             fraction.Subtract(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator, fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
             return fraction;
+        }
+    }
+    public static bool operator ==(Fraction fracFirst, Fraction fracSecond)
+    {
+        fracFirst.Reduce(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator);
+        fracSecond.Reduce(fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+        if (fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator == fracSecond.Numerator && fracFirst.Denominator == fracSecond.Denominator)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public static bool operator !=(Fraction fracFirst, Fraction fracSecond)
+    {
+        fracFirst.Reduce(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator);
+        fracSecond.Reduce(fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+        if (fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator == fracSecond.Numerator && fracFirst.Denominator == fracSecond.Denominator)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    public static bool operator >(Fraction fracFirst, Fraction fracSecond)
+    {
+        fracFirst.Reduce(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator);
+        fracSecond.Reduce(fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+        if (fracFirst.Whole > fracSecond.Whole)
+        {
+            return true;
+        }else if (fracFirst.Whole < fracSecond.Whole)
+        {
+            return false;
+        }else if(fracFirst == fracSecond)
+        {
+            return false;
+        }else if(fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator > fracSecond.Numerator)
+        {
+            return true;
+        }else //if (fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator < fracSecond.Numerator)
+        {
+            return false;
+        }
+    }
+    public static bool operator >=(Fraction fracFirst, Fraction fracSecond)
+    {
+        fracFirst.Reduce(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator);
+        fracSecond.Reduce(fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+        if (fracFirst == fracSecond)
+        {
+            return true;
+        }else if (fracFirst > fracSecond)
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+    public static bool operator <(Fraction fracFirst,Fraction fracSecond)
+    {
+        fracFirst.Reduce(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator);
+        fracSecond.Reduce(fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+        if (fracFirst.Whole < fracSecond.Whole)
+        {
+            return true;
+        }
+        else if (fracFirst.Whole > fracSecond.Whole)
+        {
+            return false;
+        }
+        else if (fracFirst == fracSecond)
+        {
+            return false;
+        }
+        else if (fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator < fracSecond.Numerator)
+        {
+            return true;
+        }
+        else //if (fracFirst.Whole == fracSecond.Whole && fracFirst.Numerator < fracSecond.Numerator)
+        {
+            return false;
+        }
+    }
+    public static bool operator <=(Fraction fracFirst, Fraction fracSecond)
+    {
+        fracFirst.Reduce(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator);
+        fracSecond.Reduce(fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+        if (fracFirst == fracSecond)
+        {
+            return true;
+        }
+        else if (fracFirst < fracSecond)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     
