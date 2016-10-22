@@ -106,21 +106,21 @@ public class Fraction
         {
             //Using Math.Floor to Round Down so that the Whole Number isn't incorrectly rounding up causing incorrect values
             _whole = Convert.ToInt16(Math.Floor(Convert.ToDouble(Convert.ToDouble(Numerator) / Convert.ToDouble(Denominator))));
-            _numerator = 0;
-            _denominator = 1;
+            _numerator = _numerator % _denominator;
+            
 
         }
-        else if (num == denom)
+        else if (_numerator == _denominator)
         {
             //Using Math.Floor to Round Down so that the Whole Number isn't incorrectly rounding up causing incorrect values
             _whole = Convert.ToInt16(Math.Floor(Convert.ToDouble(Convert.ToDouble(Numerator) / Convert.ToDouble(Denominator))));
             _numerator = 0;
             _denominator = 1;
         }
-        else if (num > denom)
+        else if (_numerator > _denominator)
         {
             //Using Math.Floor to Round Down so that the Whole Number isn't incorrectly rounding up causing incorrect values
-            _whole = Convert.ToInt16(Math.Floor(Convert.ToDouble(Convert.ToDouble(_numerator) / Convert.ToDouble(_denominator))));
+            _whole = whole + Convert.ToInt16(Math.Floor(Convert.ToDouble(Convert.ToDouble(_numerator) / Convert.ToDouble(_denominator))));
             _numerator = num % denom;
         }
         //For loop to ensure Numerator and Denominator are factored into their lowest possible form
@@ -417,6 +417,7 @@ public class Fraction
         int endString = fracFirst.Length;
         //initializes variable to hold spaceIndex if there is a whole number
         int spaceIndex = 0;
+        int slashIndex = 0;
         //Checks for space
         if (fracFirst.Contains(" "))
         {
@@ -429,7 +430,7 @@ public class Fraction
         if (fracFirst.Contains("/"))
         {
             //Grabs the index of the space
-            int slashIndex = fracFirst.IndexOf("/");
+            slashIndex = fracFirst.IndexOf("/");
             //Grabs the numerator from the remaining string
             numFirst = Convert.ToInt16(fracFirst.Substring(spaceIndex, slashIndex - spaceIndex)); //parses from the index of the space and sets the length of the substring to the (slashes index - spaceIndex) ie. The string value from the space to the slash
             //Grabs the denominator from the remaining string
@@ -437,9 +438,14 @@ public class Fraction
 
 
         }
+        if (spaceIndex == 0 && slashIndex == 0)
+        {
+            _whole = Convert.ToInt32(fracFirst);
+        }
 
         //initializes variable to hold spaceIndex if there is a whole number
         int spaceIndex2 = 0;
+        int slashIndex2 = 0;
         //Looks at the first string Fraction and finds the end index
         int endString2 = fracSecond.Length;
         //Checks for space
@@ -454,7 +460,7 @@ public class Fraction
         if (fracSecond.Contains("/"))
         {
             //Grabs the index of the space
-            int slashIndex2 = fracSecond.IndexOf("/");
+            slashIndex2 = fracSecond.IndexOf("/");
             //Grabs the numerator from the remaining string
             numSecond = Convert.ToInt16(fracSecond.Substring(spaceIndex2, slashIndex2 - spaceIndex2));//parses from the index of the space and sets the length of the substring to the (slashes index - spaceIndex) ie. The string value from the space to the slash
             //Grabs the denominator from the remaining string
@@ -462,6 +468,10 @@ public class Fraction
 
 
 
+        }
+        if (spaceIndex2 == 0 && slashIndex2 == 0)
+        {
+            _whole = Convert.ToInt32(fracFirst);
         }
     }
     private void parseString(string fracFirst)
@@ -496,6 +506,7 @@ public class Fraction
             _whole = Convert.ToInt32(fracFirst);
         }
     }
+    // Still under development, hasn't had much time under testing.
     private void parseDecimalString(string fracFirst, int decPlaces)
     {
         //Looks at the first string Fraction and finds the end index
@@ -507,16 +518,22 @@ public class Fraction
         if (fracFirst.Contains("."))
         {
             //Grabs the index of the decimal place
-            dotIndex = fracFirst.IndexOf(" ");
+            dotIndex = fracFirst.IndexOf(".");
             //Grabs the whole number from the string
-            _whole = Convert.ToInt16(fracFirst.Substring(0, dotIndex));//parses from index 0 and sets the length of the substring to the spaceIndex
+            if (dotIndex > 0)
+            {
+                _whole = Convert.ToInt16(fracFirst.Substring(0, dotIndex));//parses from index 0 and sets the length of the substring to the spaceIndex
+            }else
+            {
+                _whole = 0;
+            }
         }
 
-        double newDouble = (Convert.ToDouble(fracFirst.Substring(dotIndex, endString)) * Convert.ToDouble(10));
+        double newDouble = (Convert.ToDouble(fracFirst.Substring(dotIndex, endString-dotIndex)));
         //Sets the fractions numerator to take into account based on number of decimal places desired
-        _numerator = Convert.ToInt32(Math.Pow(newDouble, Convert.ToDouble(decPlaces)));
+        _numerator = Convert.ToInt32(newDouble * Math.Pow(10, Convert.ToDouble(decPlaces)));
         //Sets _denominator so Reduce can later be called.
-        _denominator = 10 ^ decPlaces;
+        _denominator = Convert.ToInt32(Math.Pow(10,Convert.ToDouble(decPlaces)));
 
 
 
@@ -526,7 +543,13 @@ public class Fraction
     //Creates an improper fraction if user just wants an improper fractions
     public void MakeImproper()
     {
-        _numerator = _whole * _numerator;
+        if (_whole != 0)
+        {
+            _numerator = _whole * _denominator + _numerator;
+        }else
+        {
+            //_numerator stays the same
+        }
         _whole = 0;
     }
     //Creates a proper fraction if the user wants the improper fraction back into a proper one.
@@ -540,15 +563,17 @@ public class Fraction
     //Decimal to fraction, then reduce
     public string DecToFrac(decimal dec, int decPlaces, bool properFrac)
     {
-        string fracFirst = String.Format("{0,R}", Convert.ToString(dec));
+        string fracFirst = Convert.ToString(dec);
 
         parseDecimalString(fracFirst, decPlaces);
         Reduce(_whole, _numerator, _denominator);
         if (!properFrac)
         {
+            //Reduce(_whole, _numerator, _denominator);
             MakeImproper();
             return _numerator + "/" + _denominator;
         }
+        Reduce(_whole, _numerator, _denominator);
         return _whole + " " + _numerator + "/" + _denominator;
     }
 
