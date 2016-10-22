@@ -159,6 +159,8 @@ public class Fraction
             _numerator = num % denom;
             _denominator = denom;
         }
+        _numerator = num;
+        _denominator = denom;
         //For loop to ensure Numerator and Denominator are factored into their lowest possible form
         for (int i = _numerator * _denominator; i > 1; i--)
         {
@@ -322,19 +324,30 @@ public class Fraction
     //Overloaded Divides 2 numerators and 2 denominators
     public void Divide(int numFirst, int denomFirst, int numSecond, int denomSecond)
     {
-        int tempDenom;
-        _whole = 0;
-        //Inverses second fraction to simply multiply and reuse code from multiply
-        //After temp is given back to numSecond a private Multiply function could be used if adding to the stack is of no importance.
-        tempDenom = denomSecond;
-        denomSecond = numSecond;
-        numSecond = tempDenom;
-        //Combines the _numerators to pass to Reduce() for a reduced proper fraction
-        //MultiplyForDivision(numFirst,denomFirst,numSecond,denomSecond); instead of the next 2 lines
-        _numerator = numFirst * numSecond;
-        _denominator = denomFirst * denomSecond;
-        //Calls Reduce to reduce to proper fraction
-        Reduce(_whole, _numerator, _denominator);
+        if (numFirst == numSecond && denomFirst == denomSecond)
+        {
+            _whole = 1;
+        }
+        else
+        {
+            int tempDenom;
+            _whole = 0;
+            //Inverses second fraction to simply multiply and reuse code from multiply
+            //After temp is given back to numSecond a private Multiply function could be used if adding to the stack is of no importance.
+            tempDenom = denomSecond;
+            denomSecond = numSecond;
+            numSecond = tempDenom;
+            //Combines the _numerators to pass to Reduce() for a reduced proper fraction
+            //MultiplyForDivision(numFirst,denomFirst,numSecond,denomSecond); instead of the next 2 lines
+            _numerator = numFirst * numSecond;
+            _denominator = denomFirst * denomSecond;
+            if (_denominator == 0)
+            {
+                return;
+            }
+            //Calls Reduce to reduce to proper fraction
+            Reduce(_whole, _numerator, _denominator);
+        }
     }
     //ReturnFraction() method used to look at current Properties of FractionDemo class and depending on values will return the results in string format
     public string ReturnFraction()
@@ -344,6 +357,8 @@ public class Fraction
         {
             //Reduces values to proper fraction
             Reduce(_whole, _numerator, _denominator);
+            
+            
         }
         //Checks to see _whole is not 0 and a valid fraction remains
         if (_whole != 0 && _numerator != 0 && _numerator < _denominator)
@@ -531,6 +546,63 @@ public class Fraction
         }
         return _whole + " " + _numerator + "/" + _denominator;
     }
+
+    public static Fraction operator *(Fraction fracFirst, Fraction fracSecond)
+    {
+        Fraction fraction = new Fraction();
+        if (fracFirst.Whole == 0 | fracSecond.Whole == 0)
+        {
+            fraction.Multiply(fracFirst.Numerator, fracFirst.Denominator, fracSecond.Numerator, fracSecond.Denominator);
+            return fraction;
+        }
+        else { 
+        fraction.Multiply(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator, fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+        return fraction;
+    }
+    }
+    public static Fraction operator /(Fraction fracFirst, Fraction fracSecond)
+    {
+        Fraction fraction = new Fraction();
+        if (fracFirst.Whole == 0 && fracSecond.Whole == 0)
+        {
+            fraction.Divide(fracFirst.Numerator, fracFirst.Denominator, fracSecond.Numerator, fracSecond.Denominator);
+            return fraction;
+        }
+        else
+        {
+            fraction.Divide(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator, fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+            return fraction;
+        }
+    }
+    public static Fraction operator +(Fraction fracFirst, Fraction fracSecond)
+    {
+        Fraction fraction = new Fraction();
+        if (fracFirst.Whole == 0 | fracSecond.Whole == 0)
+        {
+            fraction.Add(fracFirst.Numerator, fracFirst.Denominator, fracSecond.Numerator, fracSecond.Denominator);
+            return fraction;
+        }
+        else
+        {
+            fraction.Add(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator, fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+            return fraction;
+        }
+    }
+    public static Fraction operator -(Fraction fracFirst, Fraction fracSecond)
+    {
+        Fraction fraction = new Fraction();
+        if (fracFirst.Whole == 0 | fracSecond.Whole == 0)
+        {
+            fraction.Subtract(fracFirst.Numerator, fracFirst.Denominator, fracSecond.Numerator, fracSecond.Denominator);
+            return fraction;
+        }
+        else
+        {
+            fraction.Subtract(fracFirst.Whole, fracFirst.Numerator, fracFirst.Denominator, fracSecond.Whole, fracSecond.Numerator, fracSecond.Denominator);
+            return fraction;
+        }
+    }
+    
     //Compare fraction to integer, compare fractions return boolean
 
 
